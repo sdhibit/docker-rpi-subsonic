@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
  apt-get update && \
- apt-get install -qy supervisor wget unzip ffmpeg lame locales && \
+ apt-get install -qy wget ffmpeg lame locales && \
  apt-get clean
 
 #Download & Install Java 8 arm hard float from Oracle
@@ -35,9 +35,8 @@ RUN mkdir -p /usr/share/subsonic && \
 # Don't fork to the background
 RUN sed -i "s/ > \${LOG} 2>&1 &//" /usr/share/subsonic/subsonic.sh
 
-ADD ./supervisor/supervisor.conf /etc/supervisor/supervisor.conf
-
 EXPOSE 4040
 
+CMD []
 # Activate subsonic under supervisor so the Docker container is persisted
-CMD ["supervisord", "-c", "/etc/supervisor/supervisor.conf"]
+ENTRYPOINT ["/usr/share/subsonic/subsonic.sh"]
