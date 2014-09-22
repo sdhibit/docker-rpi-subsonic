@@ -16,9 +16,8 @@ RUN mkdir -p /opt/jdk1.8.0 && \
  --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
  "http://download.oracle.com/otn-pub/java/jdk/8u6-b23/jdk-8u6-linux-arm-vfp-hflt.tar.gz" && \
  tar zxvf /tmp/jdk1.8.0.tar.gz -C /opt/jdk1.8.0 --strip-components 1 && \
- rm /tmp/jdk1.8.0.tar.gz
-
-RUN update-alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.0/bin/java" 1 && \
+ rm /tmp/jdk1.8.0.tar.gz && \
+ update-alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.0/bin/java" 1 \
  update-alternatives --set java /opt/jdk1.8.0/bin/java
 
 ENV JAVA_HOME /opt/jdk1.8.0
@@ -30,6 +29,13 @@ RUN mkdir -p /usr/share/subsonic && \
  tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
  rm -rf /tmp/subsonic-4.9-standalone.tar.gz
 
+RUN useradd --home /var/subsonic -M -K UID_MIN=10000 -K GID_MIN=10000 -U subsonic && \
+ mkdir -p /var/subsonic/transcode && \
+ touch /var/subsonic/dummy && \
+ chown -R subsonic:subsonic /var/subsonic && \
+ chmod -R 0770 /var/subsonic && \
+ chown -R subsonic:subsonic /usr/share/subsonic
+
 #RUN ln /var/subsonic/transcode/ffmpeg /var/subsonic/transcode/lame /usr/local/bin
 
 # Don't fork to the background
@@ -37,6 +43,7 @@ RUN sed -i "s/ > \${LOG} 2>&1 &//" /usr/share/subsonic/subsonic.sh
 
 EXPOSE 4040
 
+USER subsonic
+
 CMD []
-# Activate subsonic under supervisor so the Docker container is persisted
 ENTRYPOINT ["/usr/share/subsonic/subsonic.sh"]
