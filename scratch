@@ -1,0 +1,33 @@
+
+ # Set locale to UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LANG en_US.UTF-8
+RUN locale-gen en_US en_US.UTF-8
+
+RUN mkdir /data && \
+ ln -fs /data /var/subsonic && \
+ mkdir -p /var/subsonic.transcode && \
+ ln -fs /usr/bin/ffmpeg /var/subsonic.transcode && \
+ ln -fs /usr/bin/lame /var/subsonic.transcode && \
+ ln -fs /data /var/subsonic
+
+# Don't fork to the background
+RUN sed -i "s/ > \${LOG} 2>&1 &//" /usr/share/subsonic/subsonic.sh
+
+RUN useradd --comment 'Subsonic Service Account' --no-create-home --shell /bin/bash --user-group subsonic && \
+ chown -R subsonic:subsonic $SUBSONIC_HOME && \
+ chown -R subsonic:subsonic /data && \
+ chown -R subsonic:subsonic /usr/share/subsonic && \
+ chmod -R 777 /var/subsonic.transcode
+
+ADD ./supervisor/supervisor.conf /etc/supervisor/supervisor.conf
+ADD ./start.sh /usr/share/subsonic/start.sh
+
+RUN chmod +x /usr/share/subsonic/start.sh && \
+ chown subsonic:subsonic /usr/share/subsonic/start.sh
+
+EXPOSE 4040
+VOLUME ["/data"]
+
+# Activate subsonic under supervisor so the Docker container is persisted
+CMD ["supervisord", "-c", "/etc/supervisor/supervisor.conf"]
