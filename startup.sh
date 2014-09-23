@@ -106,7 +106,7 @@ while [ $# -ge 1 ]; do
 done
 
 mkdir -p \
-    ${SUBSONIC_HOME} \
+    ${SUBSONIC_HOME}/transcode \
     ${SUBSONIC_DEFAULT_PODCAST_FOLDER} \
     ${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
     /tmp/subsonic
