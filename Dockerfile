@@ -33,9 +33,9 @@ RUN useradd --home /var/subsonic -M -K UID_MIN=10000 -K GID_MIN=10000 -U subsoni
  chmod +x /usr/share/subsonic/startup.sh
 
 #Download & Install Subsonic Standalone
-RUN wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/4.9/subsonic-4.9-standalone.tar.gz" && \
- tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
- rm -rf /tmp/subsonic-4.9-standalone.tar.gz
+RUN wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/5.0/subsonic-5.0-standalone.tar.gz" && \
+ tar zxvf /tmp/subsonic-5.0-standalone.tar.gz -C /usr/share/subsonic && \
+ rm -rf /tmp/subsonic-5.0-standalone.tar.gz
 
 EXPOSE 4040
 VOLUME ["/var/subsonic", "/var/music"]
