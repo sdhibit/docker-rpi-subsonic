@@ -23,11 +23,6 @@ RUN mkdir -p /opt/jdk1.8.0 && \
 ENV JAVA_HOME /opt/jdk1.8.0
 ENV PATH $PATH:$JAVA_HOME/bin
 
-#Download & Install Subsonic Standalone
-#RUN mkdir -p /usr/share/subsonic && \ 
-# tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
-# rm -rf /tmp/subsonic-4.9-standalone.tar.gz
-
 ADD ./startup.sh /usr/share/subsonic/startup.sh
 
 RUN useradd --home /var/subsonic -M -K UID_MIN=10000 -K GID_MIN=10000 -U subsonic && \
