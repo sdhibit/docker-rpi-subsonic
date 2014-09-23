@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
  apt-get update && \
- apt-get install -qy wget ffmpeg lame locales && \
+ apt-get install --no-install-recommends -qy wget ffmpeg lame locales && \
  apt-get clean
 
 #Download & Install Java 8 arm hard float from Oracle
@@ -24,12 +24,9 @@ ENV JAVA_HOME /opt/jdk1.8.0
 ENV PATH $PATH:$JAVA_HOME/bin
 
 #Download & Install Subsonic Standalone
-RUN mkdir -p /usr/share/subsonic && \ 
- wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/4.9/subsonic-4.9-standalone.tar.gz" && \
- tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
- rm -rf /tmp/subsonic-4.9-standalone.tar.gz
-
-RUN touch ./test
+#RUN mkdir -p /usr/share/subsonic && \ 
+# tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
+# rm -rf /tmp/subsonic-4.9-standalone.tar.gz
 
 ADD ./startup.sh /usr/share/subsonic/startup.sh
 
@@ -39,6 +36,11 @@ RUN useradd --home /var/subsonic -M -K UID_MIN=10000 -K GID_MIN=10000 -U subsoni
  chmod -R 0770 /var/subsonic && \
  chown -R subsonic:subsonic /usr/share/subsonic && \
  chmod +x /usr/share/subsonic/startup.sh
+
+#Download & Install Subsonic Standalone
+RUN wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/4.9/subsonic-4.9-standalone.tar.gz" && \
+ tar zxvf /tmp/subsonic-4.9-standalone.tar.gz -C /usr/share/subsonic && \
+ rm -rf /tmp/subsonic-4.9-standalone.tar.gz
 
 EXPOSE 4040
 VOLUME ["/var/subsonic", "/var/music"]
