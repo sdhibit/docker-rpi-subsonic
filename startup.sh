@@ -114,8 +114,8 @@ mkdir -p \
 LOG=${SUBSONIC_HOME}/subsonic_sh.log
 truncate -s0 ${LOG}
 
-[ ! -L $SUBSONIC_HOME/transcode ] && ln -s /usr/local/bin/ffmpeg $SUBSONIC_HOME/transcode/ffmpeg
-[ ! -L $SUBSONIC_HOME/transcode ] && ln -s /usr/local/bin/lame $SUBSONIC_HOME/transcode/lame
+[ ! -L $SUBSONIC_HOME/transcode/ffmpeg ] && ln -s /usr/local/bin/ffmpeg $SUBSONIC_HOME/transcode/ffmpeg
+[ ! -L $SUBSONIC_HOME/transcode/lame ] && ln -s /usr/local/bin/lame $SUBSONIC_HOME/transcode/lame
     
 cd /usr/share/subsonic
 
@@ -130,5 +130,5 @@ exec /usr/bin/java -Xmx${SUBSONIC_MAX_MEMORY}m \
     -Dsubsonic.defaultPlaylistFolder=${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
     -Djava.awt.headless=true \
     -verbose:gc \
-    -jar subsonic-booter-jar-with-dependencies.jar   
-#-jar subsonic-booter-jar-with-dependencies.jar >> ${LOG} 2>&1
+    -jar subsonic-booter-jar-with-dependencies.jar >> ${LOG} 2>&1   
+
