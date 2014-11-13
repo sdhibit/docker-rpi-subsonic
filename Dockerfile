@@ -37,7 +37,11 @@ RUN wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/5.0/s
  tar zxvf /tmp/subsonic-5.0-standalone.tar.gz -C /usr/share/subsonic && \
  rm -rf /tmp/subsonic-5.0-standalone.tar.gz
 
+#Subsonic Web Port
 EXPOSE 4040
+#DLNA Discovery Port
+EXPOSE 1900/udp
+
 VOLUME ["/var/subsonic", "/var/music"]
 
 USER subsonic
