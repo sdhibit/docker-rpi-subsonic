@@ -1,24 +1,19 @@
-FROM sdhibit/rpi-raspbian
-MAINTAINER Steve Hibit <sdhibit@gmail.com>
+FROM resin/rpi-raspbian
+MAINTAINER Jeremy Bush <contractfrombelow@gmail.com>
 
 # Let the container know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
  apt-get update && \
- apt-get install --no-install-recommends -qy wget ffmpeg lame locales && \
+ apt-get install --no-install-recommends -qy ca-certificates wget lame locales oracle-java8-jdk && \
  apt-get clean
 
-#Download & Install Java 8 arm hard float from Oracle
-RUN mkdir -p /opt/jdk1.8.0 && \
- wget -O /tmp/jdk1.8.0.tar.gz \
- --no-cookies --no-check-certificate \
- --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
- "http://download.oracle.com/otn-pub/java/jdk/8u6-b23/jdk-8u6-linux-arm-vfp-hflt.tar.gz" && \
- tar zxvf /tmp/jdk1.8.0.tar.gz -C /opt/jdk1.8.0 --strip-components 1 && \
- rm /tmp/jdk1.8.0.tar.gz && \
- update-alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.0/bin/java" 1 && \
- update-alternatives --set java /opt/jdk1.8.0/bin/java
+WORKDIR /tmp
+RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-32bit-static.tar.xz && \
+  mkdir ffmpeg && \
+  tar -C ffmpeg --strip-components=1 -xvf ffmpeg-release-armhf-32bit-static.tar.xz && \
+  mv ffmpeg/ffmpeg /usr/local/bin
 
 ENV JAVA_HOME /opt/jdk1.8.0
 ENV PATH $PATH:$JAVA_HOME/bin
@@ -33,9 +28,9 @@ RUN useradd --home /var/subsonic -M -K UID_MIN=10000 -K GID_MIN=10000 -U subsoni
  chmod +x /usr/share/subsonic/startup.sh
 
 #Download & Install Subsonic Standalone
-RUN wget -P /tmp/ "http://sourceforge.net/projects/subsonic/files/subsonic/5.0/subsonic-5.0-standalone.tar.gz" && \
- tar zxvf /tmp/subsonic-5.0-standalone.tar.gz -C /usr/share/subsonic && \
- rm -rf /tmp/subsonic-5.0-standalone.tar.gz
+RUN wget -P /tmp/ "https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-6.1.3-standalone.tar.gz" && \
+ tar zxvf /tmp/subsonic-6.1.3-standalone.tar.gz -C /usr/share/subsonic && \
+ rm -rf /tmp/subsonic-6.1.3-standalone.tar.gz
 
 #Subsonic Web Port
 EXPOSE 4040
